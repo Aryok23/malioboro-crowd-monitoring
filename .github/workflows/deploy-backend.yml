@@ -1,0 +1,35 @@
+name: Deploy backend to Oracle VM
+
+# Only the backend needs a custom deploy step — the frontend deploys via
+# Vercel/Cloudflare Pages' native GitHub integration (see README), which
+# needs no workflow file of its own.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "Dockerfile"
+      - "docker-compose.yml"
+      - ".dockerignore"
+      - ".github/workflows/deploy-backend.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into Oracle VM and redeploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.ORACLE_VM_HOST }}
+          username: ${{ secrets.ORACLE_VM_USER }}
+          key: ${{ secrets.ORACLE_VM_SSH_KEY }}
+          port: ${{ secrets.ORACLE_VM_PORT || 22 }}
+          # REMOTE_PATH: absolute path to the repo clone on the VM, e.g.
+          # /home/ubuntu/malioboro-monitor — set up once during initial VM
+          # setup (see README "Oracle VM setup").
+          script: |
+            set -e
+            cd ${{ secrets.ORACLE_VM_REMOTE_PATH }}
+            git pull --ff-only origin main
+            docker compose up -d --build
+            docker image prune -f

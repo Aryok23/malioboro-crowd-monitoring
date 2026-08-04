@@ -1,0 +1,14 @@
+venv/
+backend/venv/
+**/__pycache__/
+*.pyc
+backend/logs/
+backend/data/
+backend/storage/
+frontend/
+node_modules/
+.git/
+.env
+*.pt
+!yolov8nbest.pt
+debug_frames/

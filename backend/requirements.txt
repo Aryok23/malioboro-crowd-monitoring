@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+opencv-python-headless
+python-dotenv
+websockets
+numpy
+ultralytics
+requests
+httpx
