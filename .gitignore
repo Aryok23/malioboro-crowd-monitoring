@@ -12,5 +12,5 @@ debug_frames/
 dataset/
 backend/logs/
 backend/storage/alerts/
-*.pt
-*.pth
+# *.pt
+# *.pth
